@@ -80,15 +80,123 @@ def process_arithmetic(command, filename, l_no, state):
             '@SP', 'A=M-1', # SP--
             'M={}M'.format(symb.get(command)),          # save for next computation
         ]
-    ret.extend([
-        '@SP', 'AM=M-1', # SP--,
-        'D=M', 'A=A-1'
-    ])
-    
-    if command in ('add', 'sub', 'and', 'or'):
+    if command in ('bool'):
+      ret.extend([         
+      '@SP',
+      'AM=M-1',
+      'D=M',
+      '@{}END_BOOL_{}'.format(state[2],state[0]),
+      'D;JEQ',
+      '@SP',
+      'A=M',
+      'M=-1',
+      '({}END_BOOL_{})'.format(state[2],state[0]),
+      '@SP',
+      'M=M+1'
+      ])
+    if command in ('l-not'):
+      ret.extend([
+        '@SP',  
+        'AM=M-1',
+        'D=M',
+        '@{}val_eq_0{}'.format(state[2],state[0]), 
+        'D;JEQ',
+        '@SP',
+        'A=M',
+        'M=0',
+        '@{}continue{}'.format(state[2],state[0]),
+        '0;JMP',
+        '({}val_eq_0{})'.format(state[2],state[0]),
+        '@SP',
+        'A=M',
+        'M=-1',
+        '({}continue{})'.format(state[2],state[0]),
+        '@SP',
+        'M=M+1'
+      ])
+    if command in ('l-and'):
+      ret.extend([
+        '@SP', 
+        'AM=M-1',
+        'D=M', 
+        '@{}False{}'.format(state[2],state[0]),
+        'D;JEQ',
+        '@SP',
+        'A=M-1',
+        'D=M',
+        '@{}False{}'.format(state[2],state[0]),
+        'D;JEQ',
+        '@SP', 
+        'AM=M-1',
+        'M=-1',
+        '@{}Continue{}'.format(state[2],state[0]),
+        '0;JMP',
+        '({}False{})'.format(state[2],state[0]),
+        '@SP', 
+        'AM=M-1',
+        'M=0',
+        '({}Continue{})'.format(state[2],state[0]),
+        '@SP',
+        'M=M+1'
+      ])
+    if command in ('l-xor'):
+      ret.extend([          
+            '@SP',
+            'AM=M-1',
+            'D=M',
+            '@FIRSTTRUE_{}'.format(state[0]),
+            'D;JNE',
+            '@SP',
+            'AM=M-1',
+            'D=M',
+            '@FIRSTFALSE_SECNDTRUE_{}'.format(state[0]),
+            'D;JNE',
+            '@SP',
+            'A=M',
+            'M=0',
+            '@CONT_{}'.format(state[0]),
+            '0;JMP',
+            '(FIRSTTRUE_{})'.format(state[0]),
+            '@SP',
+            'AM=M-1',
+            'D=M',
+            '@SECONDTRUE_{}'.format(state[0]),
+            'D;JNE',
+            '@SP',
+            'A=M',
+            'M=-1',
+            '@CONT_{}'.format(state[0]),
+            '0;JMP',
+            '(SECONDTRUE_{})'.format(state[0]),
+            '@SP',
+            'A=M',
+            'M=0',
+            '@CONT_{}'.format(state[0]),
+            '0;JMP',
+            '(FIRSTFALSE_SECNDTRUE_{})'.format(state[0]),
+            '@SP',
+            'A=M',
+            'M=-1',
+            '(CONT_{})'.format(state[0]),
+            '@SP',
+            'M=M+1'])
+
+
+    if command in ('add', 'sub', 'or'):
+        ret.extend([
+        '@SP', 
+        'AM=M-1', # SP--,
+        'D=M', 
+        'A=A-1'
+        ])
         ret.append('M=M{}D'.format(symb.get(command)))
+
     elif command in ('eq', 'gt', 'lt','le','ge','ne'):
         ret.extend([
+            '@SP', 
+            'AM=M-1', # SP--,
+            'D=M', 
+            'A=A-1'
             'D=M-D',
             '@FALSE_{}'.format(state[0]), # Jump to make M=1 if condition is true
             'D;{}'.format(symb.get(command)), 
