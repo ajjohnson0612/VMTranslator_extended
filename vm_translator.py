@@ -1,4 +1,4 @@
-
+import re 
 def valid(line):
     """ Line valid or not? """
     line = line.strip()
@@ -6,6 +6,8 @@ def valid(line):
         return False
     if line.startswith('//'):
         return False
+    
+        
     return True
 
 def clean_lines(lines):
@@ -18,27 +20,37 @@ def initialization(filename):
     Initialize base addresses.
     """
     ret = ['@256', 'D=A', '@SP', 'M=D']
-    ret.extend(process_call("Sys.init",0, filename, 0))
+    ret.extend(process_call("Sys.init",0, filename, 0,0))
     return ret
 
 def process_push_pop(command, arg1, arg2, fname, l_no):
     mapping = {'local':'@LCL', 'argument':'@ARG', 'this':'@THIS','that':'@THAT', 
                'static':16, 'temp' : 5, 'pointer': 3}
     ret = []
-    if arg2 < 0 :
+    comp = (int(arg2))
+    if comp >= 32768:
+        print("To large of number at File {}, Line {}".format(fname, l_no))
+    if comp < 0 :
         print('Invalid location for push or pop. File {}. Line {}'.format(fname, l_no))
     if arg1 == 'constant':
         if command == 'pop':
-        ret.extend([
+            ret.extend([
             '@{}'.format(arg2),
-        ])
+            ])
     elif arg1 == 'static':
         ret.extend([
             '@{}.{}'.format(fname, arg2) 
         ])
+    elif arg1 == 'ram':
+        ret.extend([
+            '@{}'.format(arg2)])
+
+
     elif arg1 in ('temp', 'pointer'):
-        if int(arg2) > 10:
+        if int(arg2) > 10 and arg1 == 'pointer':
             print('Invalid location for segment. File {}. Line {}'.format(fname, l_no))
+        elif int(arg2) > 7 and arg1 == 'temp':
+            print('Invalid location for segment. FIle {}, Line {}'.format(fname,l_no))
         ret.extend([
             '@R{}'.format(mapping.get(arg1)+int(arg2))
         ])
@@ -52,7 +64,7 @@ def process_push_pop(command, arg1, arg2, fname, l_no):
     if command == 'push':
         if arg1 == 'constant':
             ret.append('D=A')
-        if arg1 == 'ram'
+        if arg1 == 'ram':
             ret.append('D=M')
         else:
             ret.append('D=M')
@@ -76,10 +88,28 @@ def process_arithmetic(command, filename, l_no, state):
     symb = {'add':'+', 'sub':'-', 'and':'&', 'or':'|', 'neg': '-', 'not':'!', 'eq':'JNE', 'lt':'JGE', 'gt':'JLE', 'le' : 'LTE' , 'ge': 'GTE', 'ne' : '!='}
 
     if command in ('neg', 'not', 'ne'): # unary operators
-        return [
+        ret.extend([
             '@SP', 'A=M-1', # SP--
-            'M={}M'.format(symb.get(command)),          # save for next computation
-        ]
+            'M={}M'.format(symb.get(command)) ])
+    if command in ('l-or'):
+       ret.extend([
+            '@SP',
+            'AM=M-1',
+            'D=M',
+            '@{}true{}'.format(state[2],state[0]),
+            'D;JNE',
+            '@SP',
+            'AM=M-1',
+            'M=0'
+            '@{}continue{}'.format(state[2],state[0]),
+            '0;JMP',
+            '({}true{})'.format(state[2],state[0]),
+            '@SP',
+            'AM=M-1',
+            'M=-1',
+            '({}continue{})'.format(state[2],state[0]),
+            '@SP'
+            'M=M+1'])
     if command in ('bool'):
       ret.extend([         
       '@SP',
@@ -205,8 +235,9 @@ def process_arithmetic(command, filename, l_no, state):
             '(CONTINUE_{})'.format(state[0])
         ])
         state[0] += 1
-    else:
-        print('File {}. Line {}'.format(filename, l_no))
+    if not ret:
+        print("Unkown logical operator {}, Line {}".format(command,l_no))
+        
     
     # ret.extend(['@SP', 'M=M+1']) # SP++
     
@@ -214,9 +245,9 @@ def process_arithmetic(command, filename, l_no, state):
 
 
 def process_call(arg1, arg2, filename, call_count, l_no):
-    if (call_count < 0):
+    if re.match("^[0-9]*$",(str(call_count))) == None:
         print('Invalid number of local/args File {}, Line{}, Args: {}'.format(filename,l_no,arg2))
-
+    
     new_label = '{}.RET_{}'.format(filename, call_count)
     ret = [
         '@{}'.format(new_label),
@@ -254,9 +285,13 @@ def process_return():
     return ret
 
 def process_function(arg1, arg2,l_no,filename):
-    if(arg1.match("^[A-Za-z0-9_-]*$") == None):
+    if(re.match("^[A-Za-z0-9_.-]*$",arg1) == None):
         print('Invalid function name File: {}, Line: {}, Name: {}'.format(filename,l_no,arg1))
+        return " "
+    if (re.match("^[0-9]*$",arg2) == None):
 
+        print ("Illegal count, for function {}{}, line {}, file {}".format(arg1,arg2,l_no,filename))
+        return " "
     ret = ['({})'.format(arg1)]
     for _ in range(int(arg2)):
         ret.extend([
@@ -276,21 +311,25 @@ def process_line(line, filename, l_no, state):
         if command == 'return':
             ret = process_return()
             #state[2] = ''
-        elif command in ('add', 'sub', 'neg', 'eq', 'gt', 'lt', 'and', 'or', 'not', 'le','ge','ne'):
+        elif command in ('add', 'sub', 'neg', 'eq', 'gt', 'lt', 'l-and', 'l-or', 'l-not', 'le','ge','ne','l-xor','bool','not'):
             ret = process_arithmetic(command, filename, l_no, state)
         else:
             print("{} is not a valid command. File {}. Line {}".format(command, filename, l_no))
-    
+            return ' ' 
     elif len(tokens) == 2:
-        if tokens[1].match("^[A-Za-z0-9_-]*$") == None:
+        if re.match("^[A-Za-z0-9_.-]*$",tokens[1]) == None:
             print("error invalid label/goto/if-goto name Line{}: File:{} Content:{}".format(l_no,filename,line))
+        if re.search('^\s*[0-9]',(str(tokens[1]))) != None:
+                print("Invalid label name, Line {}, FIle {}, Content {}".format(l_no,filename,line))
         if command == 'label':
             ret = ['({}{})'.format(state[2], tokens[1])]
         elif command == 'goto':
             ret = ['@{}{}'.format(state[2], tokens[1]), '0;JMP']
         elif command == 'if-goto':
             ret = ['@SP','M=M-1','A=M','D=M', '@{}{}'.format(state[2], tokens[1]), 'D;JNE']
-              
+        else:
+            print("Incorrect format at Line {}, File {}, Content {}".format(l_no,filename,line))
+            return " "
     elif len(tokens) == 3:
         if command in ('push', 'pop'):
             ret = process_push_pop(*tokens, filename, l_no)
@@ -302,10 +341,11 @@ def process_line(line, filename, l_no, state):
             state[2] = '{}$'.format(tokens[1])
         else:
             print("{} is not a valid command. File {}. Line {}".format(command, filename, l_no))
+            return " "
     
     else:
         print("{} is not a valid command. File {}. Line {}".format(command, filename, l_no))
-    
+        return " "
     return ret
 
 
@@ -371,7 +411,7 @@ if __name__ == "__main__":
     
     parser.add_argument('filename', action="store")
     parser.add_argument('-o', '--outfile' , action="store", default=None, dest='outname')
-    parser.add_argument('-s', '--strict', action = "store", defualt = None, dest = 'strictness');
+    parser.add_argument('-s', '--strict', action = "store", default = None, dest = 'strictness');
     args = parser.parse_args()
     fname = args.filename
     outname = args.outname
