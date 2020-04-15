@@ -1,0 +1,543 @@
+// File name: /VMTa/Test.vm
+
+// Does a simple test of each of the standard VM ALU commands.
+// This DOES assume that the full VM Translator has been implemented.
+
+function Test.test 2
+
+push constant 8
+pop static 42
+
+push constant 0
+pop local 1
+
+push argument 0
+pop pointer 0
+
+//========================================================================
+// TESTS FOR: add
+//========================================================================
+
+push constant 0
+push constant 0
+add
+pop this 1
+
+push constant 0
+not
+push constant 0
+add
+pop this 2
+
+push constant 0
+push constant 0
+not
+add
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+add
+pop this 4
+
+push constant 32767
+push constant 32767
+add
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+add
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+add
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+add
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: sub
+//========================================================================
+
+push constant 0
+push constant 0
+sub
+pop this 1
+
+push constant 0
+not
+push constant 0
+sub
+pop this 2
+
+push constant 0
+push constant 0
+not
+sub
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+sub
+pop this 4
+
+push constant 32767
+push constant 32767
+sub
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+sub
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+sub
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+sub
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: neg
+//========================================================================
+
+push constant 0
+neg
+pop this 1
+
+push constant 0
+not
+neg
+pop this 2
+
+push constant 1
+neg
+pop this 3
+
+push constant 1
+not
+neg
+pop this 4
+
+push constant 32767
+neg
+pop this 5
+
+push constant 32767
+not
+neg
+pop this 6
+
+push constant 16000
+neg
+pop this 7
+
+push constant 16000
+neg
+neg
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: eq
+//========================================================================
+
+push constant 0
+push constant 0
+eq
+pop this 1
+
+push constant 0
+not
+push constant 0
+eq
+pop this 2
+
+push constant 0
+push constant 0
+not
+eq
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+eq
+pop this 4
+
+push constant 32767
+push constant 32767
+eq
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+eq
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+eq
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+eq
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: lt
+//========================================================================
+
+push constant 0
+push constant 0
+lt
+pop this 1
+
+push constant 0
+not
+push constant 0
+lt
+pop this 2
+
+push constant 0
+push constant 0
+not
+lt
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+lt
+pop this 4
+
+push constant 32767
+push constant 32767
+lt
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+lt
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+lt
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+lt
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: gt
+//========================================================================
+
+push constant 0
+push constant 0
+gt
+pop this 1
+
+push constant 0
+not
+push constant 0
+gt
+pop this 2
+
+push constant 0
+push constant 0
+not
+gt
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+gt
+pop this 4
+
+push constant 32767
+push constant 32767
+gt
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+gt
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+gt
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+gt
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: and
+//========================================================================
+
+push constant 0
+push constant 0
+and
+pop this 1
+
+push constant 0
+not
+push constant 0
+and
+pop this 2
+
+push constant 0
+push constant 0
+not
+and
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+and
+pop this 4
+
+push constant 32767
+push constant 32767
+and
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+and
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+and
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+and
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: or
+//========================================================================
+
+push constant 0
+push constant 0
+or
+pop this 1
+
+push constant 0
+not
+push constant 0
+or
+pop this 2
+
+push constant 0
+push constant 0
+not
+or
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+or
+pop this 4
+
+push constant 32767
+push constant 32767
+or
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+or
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+or
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+or
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: not
+//========================================================================
+
+push constant 0
+not
+pop this 1
+
+push constant 0
+not
+not
+pop this 2
+
+push constant 1
+not
+pop this 3
+
+push constant 1
+not
+not
+pop this 4
+
+push constant 32767
+not
+pop this 5
+
+push constant 32767
+not
+not
+pop this 6
+
+push constant 16000
+not
+pop this 7
+
+push constant 16000
+neg
+not
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// PRE-EXIT CODE
+//========================================================================
+
+// This is dummy code to exercise the program flow commands.
+// The program always returns the total number of tests stored in local[1].
+
+push local 1
+push local 0
+eq
+not
+
+if-goto RETURN_TOTAL_TESTS
+push local 0
+goto RETURN 
+label RETURN_TOTAL_TESTS
+push local 1
+label RETURN
+
+return

@@ -1,0 +1,56 @@
+// File name: /XVMTd/Test.vm
+
+// Tests the XVM hex/binary integers.
+
+function Test.test 2
+
+push constant 8
+pop static 42
+
+push constant 0
+pop local 1
+
+push argument 0
+pop pointer 0
+
+//========================================================================
+// TESTS FOR: hex/bin
+//========================================================================
+
+push constant 0xFF
+pop this 1
+
+push constant 0X0ff
+pop this 2
+
+push constant 0x7FFF
+pop this 3
+
+push constant 0X7fff
+pop this 4
+
+push constant 0b1111111
+pop this 5
+
+push constant 0B1111111
+pop this 6
+
+push constant 0b0111111111111111
+pop this 7
+
+push constant 0B0111111111111111
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// WRAP UP CODE
+//========================================================================
+
+push local 1
+return

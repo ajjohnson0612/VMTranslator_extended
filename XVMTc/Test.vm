@@ -1,0 +1,239 @@
+// File name: /XVMTc/Test.vm
+
+// Tests the XVM logical operators.
+
+function Test.test 2
+
+push constant 8
+pop static 42
+
+push constant 0
+pop local 1
+
+push argument 0
+pop pointer 0
+
+//========================================================================
+// TESTS FOR: F op F
+//========================================================================
+
+push constant 0
+l-not
+pop this 1
+
+push constant 0
+push constant 0
+l-and
+pop this 2
+
+push constant 0
+push constant 0
+l-or
+pop this 3
+
+push constant 0
+push constant 0
+l-xor
+pop this 4
+
+push constant 0
+l-not
+pop this 5
+
+push constant 0
+push constant 0
+l-and
+pop this 6
+
+push constant 0
+push constant 0
+l-or
+pop this 7
+
+push constant 0
+push constant 0
+l-xor
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: F op T
+//========================================================================
+
+push constant 0
+l-not
+pop this 1
+
+push constant 0
+push constant 0
+not
+l-and
+pop this 2
+
+push constant 0
+push constant 0
+not
+l-or
+pop this 3
+
+push constant 0
+push constant 0
+not
+l-xor
+pop this 4
+
+push constant 0
+l-not
+pop this 5
+
+push constant 0
+push constant 42
+not
+l-and
+pop this 6
+
+push constant 0
+push constant 42
+not
+l-or
+pop this 7
+
+push constant 0
+push constant 42
+not
+l-xor
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: T op F
+//========================================================================
+
+push constant 0
+not
+l-not
+pop this 1
+
+push constant 0
+not
+push constant 0
+l-and
+pop this 2
+
+push constant 0
+not
+push constant 0
+l-or
+pop this 3
+
+push constant 0
+not
+push constant 0
+l-xor
+pop this 4
+
+push constant 42
+l-not
+pop this 5
+
+push constant 42
+push constant 0
+l-and
+pop this 6
+
+push constant 42
+push constant 0
+l-or
+pop this 7
+
+push constant 42
+push constant 0
+l-xor
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: T op T
+//========================================================================
+
+push constant 0
+not
+l-not
+pop this 1
+
+push constant 0
+not
+push constant 0
+not
+l-and
+pop this 2
+
+push constant 0
+not
+push constant 0
+not
+l-or
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+l-xor
+pop this 4
+
+push constant 42
+not
+l-not
+pop this 5
+
+push constant 42
+push constant 42
+not
+
+l-and
+pop this 6
+
+push constant 42
+push constant 42
+not
+l-or
+pop this 7
+
+push constant 42
+push constant 42
+not
+l-xor
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// WRAP UP CODE
+//========================================================================
+
+push local 1
+return

@@ -1,0 +1,68 @@
+// William L. Bahn
+// File name: /<test>/Sys.vm
+
+// This is a custom version of the Sys OS class.
+
+function Sys.init 0
+
+// TEST = 3000: (base of the TEST array)
+push constant 3000
+pop static 42
+
+// Set the array base pointer to RAM[TEST-1]
+push static 42
+push constant 1
+sub
+pop pointer 1
+
+// Initialize the tick-tock counters to zero
+push constant 0
+pop that 0 
+push that 0
+pop that 1
+
+// Output the start timer
+call Sys.output 0
+pop temp 0
+
+// Run the test program 
+push static 42
+call Test.test 1 
+pop that 2
+
+// Output the stop timer
+call Sys.output 0
+pop temp 0
+
+// Inifinite loop
+label TRAP
+goto TRAP
+
+push temp 0
+return
+
+function Sys.output 0
+
+// Set the THIS pointer to TEST-1
+push static 42
+push constant 1
+sub
+pop pointer 1
+
+// tick
+push that 0
+push constant 1
+add
+pop that 0
+
+// The test script will output the pass result at this point.
+
+// tock
+push that 1
+push constant 1
+add
+pop that 1
+
+//Return the current test number
+push that 0
+return

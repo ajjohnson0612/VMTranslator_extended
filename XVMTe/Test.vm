@@ -1,0 +1,34 @@
+// File name: /XVMTe/Test.vm
+
+// Tests the XVM error detection.
+
+function Test.test 2
+
+psuh constant 0     // Unknown command
+add 1               // Improper format
+push                // Improper format
+push constant 0     /  Improper format
+push constant -1    // Illegal index
+pop temp 8          // Index out of range
+push constant 32768 // Index out of range
+label 4bad          // Illegal label
+goto Cost:24        // Unresolved label
+if-goto Cost:$24    // Illegal label
+function t$t 4      // Illegal function name
+call t$t 4          // Illegal function name
+function myFunc n   // Illegal count
+call myFunc -1      // Illegal count
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// WRAP UP CODE
+//========================================================================
+
+push local 1
+return

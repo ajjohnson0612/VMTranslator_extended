@@ -1,0 +1,69 @@
+// File name: /XVMTb/Test.vm
+
+// Tests the XVM push/pop for the constant and ram memory segments.
+
+function Test.test 2
+
+push constant 8
+pop static 42
+
+push constant 0
+pop local 1
+
+push argument 0
+pop pointer 0
+
+//========================================================================
+// TESTS FOR: eq
+//========================================================================
+
+push constant 0
+push constant 42
+pop constant 0
+push constant 0
+eq
+pop ram 3001
+
+push ram 3
+push pointer 0
+eq
+pop this 2
+
+push constant 42
+pop ram 3003
+
+push ram 0
+pop this 4
+
+push ram 4
+push pointer 1
+eq
+pop this 5
+
+push constant 32767
+pop ram 3006
+
+push ram 3006
+neg
+pop ram 3007
+
+push ram 3006
+pop temp 7
+push ram 12
+push ram 3007
+sub
+pop ram 3008
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// WRAP UP CODE
+//========================================================================
+
+push local 1
+return

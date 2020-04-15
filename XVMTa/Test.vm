@@ -1,0 +1,375 @@
+// File name: /XVMTa/Test.vm
+
+// Tests the XVM relational commands.
+
+function Test.test 2
+
+push constant 8
+pop static 42
+
+push constant 0
+pop local 1
+
+push argument 0
+pop pointer 0
+
+//========================================================================
+// TESTS FOR: eq
+//========================================================================
+
+push constant 0
+push constant 0
+eq
+pop this 1
+
+push constant 0
+not
+push constant 0
+eq
+pop this 2
+
+push constant 0
+push constant 0
+not
+eq
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+eq
+pop this 4
+
+push constant 32767
+push constant 32767
+eq
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+eq
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+eq
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+eq
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: ne
+//========================================================================
+
+push constant 0
+push constant 0
+ne
+pop this 1
+
+push constant 0
+not
+push constant 0
+ne
+pop this 2
+
+push constant 0
+push constant 0
+not
+ne
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+ne
+pop this 4
+
+push constant 32767
+push constant 32767
+ne
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+ne
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+ne
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+ne
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: lt
+//========================================================================
+
+push constant 0
+push constant 0
+lt
+pop this 1
+
+push constant 0
+not
+push constant 0
+lt
+pop this 2
+
+push constant 0
+push constant 0
+not
+lt
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+lt
+pop this 4
+
+push constant 32767
+push constant 32767
+lt
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+lt
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+lt
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+lt
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: ge
+//========================================================================
+
+push constant 0
+push constant 0
+ge
+pop this 1
+
+push constant 0
+not
+push constant 0
+ge
+pop this 2
+
+push constant 0
+push constant 0
+not
+ge
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+ge
+pop this 4
+
+push constant 32767
+push constant 32767
+ge
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+ge
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+ge
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+ge
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: gt
+//========================================================================
+
+push constant 0
+push constant 0
+gt
+pop this 1
+
+push constant 0
+not
+push constant 0
+gt
+pop this 2
+
+push constant 0
+push constant 0
+not
+gt
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+gt
+pop this 4
+
+push constant 32767
+push constant 32767
+gt
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+gt
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+gt
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+gt
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// TESTS FOR: le
+//========================================================================
+
+push constant 0
+push constant 0
+le
+pop this 1
+
+push constant 0
+not
+push constant 0
+le
+pop this 2
+
+push constant 0
+push constant 0
+not
+le
+pop this 3
+
+push constant 0
+not
+push constant 0
+not
+le
+pop this 4
+
+push constant 32767
+push constant 32767
+le
+pop this 5
+
+push constant 32767
+push constant 32767
+neg
+le
+pop this 6
+
+push constant 32767
+neg
+push constant 32767
+le
+pop this 7
+
+push constant 32767
+neg
+push constant 32767
+neg
+le
+pop this 8
+
+call Sys.output 0
+pop local 0
+push static 42
+push local 1
+add
+pop local 1
+
+//========================================================================
+// WRAP UP CODE
+//========================================================================
+
+push local 1
+return
