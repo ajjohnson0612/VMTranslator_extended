@@ -319,8 +319,7 @@ def process_line(line, filename, l_no, state):
     elif len(tokens) == 2:
         if re.match("^[A-Za-z0-9_.-]*$",tokens[1]) == None:
             print("error invalid label/goto/if-goto name Line{}: File:{} Content:{}".format(l_no,filename,line))
-        if re.search('^\s*[0-9]',(str(tokens[1]))) != None:
-                print("Invalid label name, Line {}, FIle {}, Content {}".format(l_no,filename,line))
+        
         if command == 'label':
             ret = ['({}{})'.format(state[2], tokens[1])]
         elif command == 'goto':
@@ -330,6 +329,8 @@ def process_line(line, filename, l_no, state):
         else:
             print("Incorrect format at Line {}, File {}, Content {}".format(l_no,filename,line))
             return " "
+        if re.search('^\s*[0-9]',(str(tokens[1]))) != None:      
+          print("Invalid label name, Line {}, FIle {}, Content {}".format(l_no,filename,line))
     elif len(tokens) == 3:
         if command in ('push', 'pop'):
             ret = process_push_pop(*tokens, filename, l_no)
